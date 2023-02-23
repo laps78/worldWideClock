@@ -5,7 +5,8 @@ import { useState } from 'react';
 function App() {
   const [clocks, setClocks] = useState([]);
   const ClockTable = ({ children }) => <div className='ClockTable'>{children}</div>;
-  const changeState = (newClocks) => setClocks(newClocks);
+  const changeState = (newClocks) => setClocks(prevClocks => ([...prevClocks, newClocks]));
+
   return (
     <div className="App">
       <Form changeState={ changeState }/>

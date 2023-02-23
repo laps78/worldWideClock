@@ -1,33 +1,34 @@
 import React, { useState } from 'react';
 import timezones from './timezones';
 import { nanoid } from 'nanoid';
-import createClock from '../scripts/createClock';
 
-function Form() {
-  const [value, setValue] = useState('');
-
-  const selectHandler = (evt => {
+function Form({ changeState }) {
+  const submitHandler = (evt) => {
     evt.preventDefault();
-    setValue(evt.target.value)
-  });
-  const submitHandler = (evt => createClock(value));
+    if (evt.target.name.value.length > 0) {
+      const newValue = {
+        name: evt.target.name.value,
+        timezone: evt.target.timezone.value,
+      };
+      changeState(newValue);
+    };
+  };
+  
   const makeItems = () => timezones.map((tz) => { return <option key={nanoid()} name={`${tz.name}`}>{tz.name}</option>});
 
   return (
-    <form className="Form">
+    <form className="Form" onSubmit={submitHandler}>
       <div className="FormCol">
         <label htmlFor="name">Название</label>
         <input name="name" type="text" plaseholder="Введите название"></input>
       </div>
       <div className="FormCol">
         <label htmlFor="timezone">временная зона</label>
-        <select onChange={selectHandler}>
+        <select name="timezone">
           { makeItems() }
         </select>
       </div>
-      <button className="FormButton"
-        type="submit"
-        onSubmit={submitHandler}>Добавить</button>
+      <button className="FormButton" type="submit">Добавить</button>
     </form>
   );
 }

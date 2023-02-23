@@ -1,4 +1,18 @@
 function Clocks({ timezone }) {
+
+  const date = new Date();
+  let hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
+
+  if (hours > 12) {
+    hours -= 12;
+  }
+
+  const secondsStartDegree = 360 / 60 * seconds;
+  const minutesStartDegree = 360 / 60 * minutes + 6 / 60 * seconds;
+  const hoursStartDegree = 360 / 12 * hours + 30 / 60 * minutes + 0.5 / 60 * seconds;
+  
   return (
     <time className="clock">
       <span className="clock__stroke clock__stroke--small clock__stroke--1"></span>
