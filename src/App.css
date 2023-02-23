@@ -23,7 +23,19 @@
   height: 1rem;
 }
 
+.ClockTable {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
 /* clocks' CSS styles */
+.clock {
+  width: 20%;
+}
+
 .clock__hand {
   margin-left: -0.5em;
   margin-top: -0.5em;
