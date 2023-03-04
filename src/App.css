@@ -36,8 +36,24 @@
 }
 
 /* clocks' CSS styles */
-.clock {
+.Clocks__container {
   width: 20%;
+  display: flex;
+  flex-direcion: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid red;
+}
+
+.Clocks__header {
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+}
+
+.clock {
+  width: 100%;
 }
 
 .clock__hand {

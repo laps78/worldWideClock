@@ -12,6 +12,7 @@ function Form({ changeState }) {
         timezone: evt.target.timezone.value,
       };
       changeState(newValue);
+      evt.target.name.value = '';
     };
   };
  

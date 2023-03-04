@@ -1,6 +1,6 @@
-function Clocks({ id, name, timezone }) {
+function Clocks({ id, name, timezone, deleteClock }) {
 
-  const date = new Date();
+  const date = new Date(Date.UTC());
   let hours = date.getHours();
   const minutes = date.getMinutes();
   const seconds = date.getSeconds();
@@ -14,10 +14,11 @@ function Clocks({ id, name, timezone }) {
   const hoursStartDegree = 360 / 12 * hours + 30 / 60 * minutes + 0.5 / 60 * seconds;
   const clockDeleteHandler = (evt) => {
     console.log("clock delete!");
+    deleteClock(evt.target.dataset.id);
   }
 
   return (
-    <div className="Clocks_container">
+    <div className="Clocks__container">
       <div className="Clocks__header">
         <h1 className="Clocks__title">{name}</h1>
         <span className="Clocks_delete_button" onClick={clockDeleteHandler}>x</span>
