@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import timezones from './timezones';
 import { nanoid } from 'nanoid';
 
@@ -7,13 +7,17 @@ function Form({ changeState }) {
     evt.preventDefault();
     if (evt.target.name.value.length > 0) {
       const newValue = {
+        id: nanoid(),
         name: evt.target.name.value,
         timezone: evt.target.timezone.value,
       };
       changeState(newValue);
     };
   };
-  
+ 
+    /**
+    * Формирует список опций тега select на основании списка временных зон, подгружаемого из файла и объекта @timezones
+    * */ 
   const makeItems = () => timezones.map((tz) => { return <option key={nanoid()} name={`${tz.name}`}>{tz.name}</option>});
 
   return (

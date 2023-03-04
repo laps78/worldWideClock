@@ -1,6 +1,10 @@
 .App {
-  text-align: center;
-}
+  width: 100%;
+  display: flex;
+  flex-direcion: column;
+  justify-content: center;
+  align-items: center;
+}  
 
 .Form {
   margin: 1rem;
