@@ -15,7 +15,7 @@ function Clocks({ id, name, timezone, deleteClocks }) {
   
   const clockDeleteHandler = (evt) => {
     console.log("clock delete!");
-    console.log(evt.target.dataset.id);
+    console.log('dataset.id: ', evt.target.dataset.id);
     deleteClocks(evt.target.dataset.id);
   }
 
@@ -23,7 +23,7 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     <div className="Clocks__container">
       <div className="Clocks__header">
         <h3 className="Clocks__title">{name}</h3>
-        <span className="Clocks_delete_button" onClick={clockDeleteHandler}>x</span>
+        <span className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id}>x</span>
       </div>
       <time className="clock">
         <span className="clock__stroke clock__stroke--small clock__stroke--1"></span>
