@@ -2,13 +2,12 @@ import React, { useEffect } from 'react';
 import timezones from './timezones';
 
 function Clocks({ id, name, timezone, deleteClocks }) {
-
   const date = new Date();
   const currentTimezoneOffsetHours = date.getTimezoneOffset() / 60;
   const CurrentUTC = Date.UTC(date);
 
   console.log(CurrentUTC); // ЧТО ТУТ ЛЕЖИТ?
-  console.log('currentOffset: ', currentTimezoneOffset);
+  console.log('currentOffset: ', currentTimezoneOffsetHours);
   
   //TODO calculate targetDate!
   const calculatedOffset = () => {
@@ -19,12 +18,7 @@ function Clocks({ id, name, timezone, deleteClocks }) {
   let hours = date.getHours();
   const minutes = date.getMinutes();
   const seconds = date.getSeconds();
-  if((hours + currentTimezoneOffsetHours) > 24) {
-    hours = 
-  } 
-  if((hours + currentTimezoneOffsetHours) < 0) {
-    hours = 
-  }
+  
   if (hours > 12) {
     hours -= 12;
   }
@@ -32,6 +26,16 @@ function Clocks({ id, name, timezone, deleteClocks }) {
   const secondsStartDegree = 360 / 60 * seconds;
   const minutesStartDegree = 360 / 60 *  minutes + 6 / 60 * seconds;
   const hoursStartDegree = 360 / 12 * hours + 30 / 60 * minutes + 0.5 / 60 * seconds;
+
+  useEffect((id, hoursStartDegree, minutesStartDegree, secondsStartDegree) => {
+    const hoursHand = document.querrySelector(`${id}_hour`);
+    const minutesHand = document.querrySelector(`${id}_minute`);
+    const secondsHand = document.querrySelector(`${id}_second`);
+  
+    hoursHand.style.transform = `rotate(${hoursStartDegree}deg)`;
+    minutesHand.style.transform = `rotate(${minutesStartDegree}deg)`;
+    secondsHand.style.transform = `rotate(${secondsStartDegree}deg)`;
+  }, []);
   
   const clockDeleteHandler = (evt) => {
     deleteClocks(evt.target.dataset.id);
@@ -113,16 +117,6 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     </div>
   );
 };
-
-React.useEffect((id, hoursStartDegree, minutesStartDegree, secondsStartDegree) => {
-  const hoursHand = document.querrySelector(`${id}_hour`);
-  const minutesHand = document.querrySelector(`${id}_minute`);
-  const secondsHand = document.querrySelector(`${id}_second`);
-
-  hoursHand.style.transform = `rotate(${hoursStartDegree}deg)`;
-  minutesHand.style.transform = `rotate(${minutesStartDegree}deg)`;
-  secondsHand.style.transform = `rotate(${secondsStartDegree}deg)`;
-}, []);
 
 export default Clocks;
 
