@@ -1,53 +1,83 @@
-import React, { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import timezones from './timezones';
+import displayClockOnCanvas from '../scripts/displayClockOnCanvas';
 
 function Clocks({ id, name, timezone, deleteClocks }) {
-  const date = new Date();
-  const currentTimezoneOffsetHours = date.getTimezoneOffset() / 60;
-  const CurrentUTC = Date.UTC(date);
-
-  console.log(CurrentUTC); // ЧТО ТУТ ЛЕЖИТ?
-  console.log('currentOffset: ', currentTimezoneOffsetHours);
+  const [timeString, setTimeString] = useState('');
+  const makeClocks = () => {
+    const date = new Date();
+    const targetTime = new Date(getTargetTime(date));
+    const timeElements = getTimeElements(targetTime);
+    setTimeString(getTimeString(targetTime));
+    if(document.getElementById(id)) displayClockOnCanvas(timeElements, id);
+    return targetTime;
+  }
   
-  //TODO calculate targetDate!
-  const calculatedOffset = () => {
-    const targetTZ = timezones.find(tz => tz.name === timezone);
-    const targetDate = null;
+  const getTimeString = (time) => {
+    
+    let hours = time.getHours();
+    if (hours < 10) hours = `0${hours}`;
+
+    let minutes = time.getMinutes();
+    if (minutes < 10) minutes = `0${minutes}`;
+
+    let seconds = time.getSeconds();
+    if (seconds < 10) seconds = `0${seconds}`;
+
+    return `${hours}:${minutes}:${seconds}`;
   }
 
-  let hours = date.getHours();
-  const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
-  
-  if (hours > 12) {
-    hours -= 12;
+  const getTargetTime = (date) => {
+    const currentTimezoneOffsetMS = date.getTimezoneOffset() * 60 * 1000;
+    const targetUTCOffetMS = timezones.find(tz => tz.name === timezone).UTC_offset * 60 * 1000;
+    return date.getTime() + currentTimezoneOffsetMS + targetUTCOffetMS;
   }
 
-  const secondsStartDegree = 360 / 60 * seconds;
-  const minutesStartDegree = 360 / 60 *  minutes + 6 / 60 * seconds;
-  const hoursStartDegree = 360 / 12 * hours + 30 / 60 * minutes + 0.5 / 60 * seconds;
+  const getTimeElements = (date) => {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = date.getSeconds();
+  
+    if (hours > 12) {
+      hours -= 12;
+    }
+    return {
+      hours,
+      minutes,
+      seconds,
+    }
+  }
+
+  const canvasClock = () => <canvas className="clock__canvas" id={id} width="300px" height="300px"></canvas>;
+
+  const calculateStartClockhandDegrees = (timeElements) => {
+    const secondsStartDegree = 360 / 60 * getTimeElements.seconds;
+    const minutesStartDegree = 360 / 60 * getTimeElements.minutes + 6 / 60 * getTimeElements.seconds;
+    const hoursStartDegree = 360 / 12 * getTimeElements.hours + 30 / 60 * getTimeElements.minutes + 0.5 / 60 * getTimeElements.seconds;
+  }
 
   useEffect((id, hoursStartDegree, minutesStartDegree, secondsStartDegree) => {
-    const hoursHand = document.querrySelector(`${id}_hour`);
-    const minutesHand = document.querrySelector(`${id}_minute`);
-    const secondsHand = document.querrySelector(`${id}_second`);
+    const intervalID = window.setInterval(makeClocks, 1000);
+    /*return;
+    const hoursHand = document.querySelector(`${id}_hour`);
+    const minutesHand = document.querySelector(`${id}_minute`);
+    const secondsHand = document.querySelector(`${id}_second`);
   
     hoursHand.style.transform = `rotate(${hoursStartDegree}deg)`;
     minutesHand.style.transform = `rotate(${minutesStartDegree}deg)`;
-    secondsHand.style.transform = `rotate(${secondsStartDegree}deg)`;
+    secondsHand.style.transform = `rotate(${secondsStartDegree}deg)`;*/
+    // return () => {
+    //   if (intervalID) window.clearInterval(intervalID);
+    //   console.log('interval cleared!');
+    // };
   }, []);
-  
+
   const clockDeleteHandler = (evt) => {
     deleteClocks(evt.target.dataset.id);
   }
 
-  return (
-    <div className="Clocks__container">
-      <div className="Clocks__header">
-        <h3 className="Clocks__title">{name}</h3>
-        <div className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id}>x</div>
-      </div>
-      <time className="time__string">{`${hours}:${minutes}:${seconds}`}</time>
+  const clocksCSS = () => {
+    return (
       <time className="clock">
         <span className="clock__stroke clock__stroke--small clock__stroke--1"></span>
         <span className="clock__stroke clock__stroke--small clock__stroke--2"></span>
@@ -114,6 +144,17 @@ function Clocks({ id, name, timezone, deleteClocks }) {
         <span className="clock__hand clock__hand--minute" id={`${id}_minute`}></span>
         <span className="clock__hand clock__hand--second" id={`${id}_second`}></span>
       </time>
+    );
+  }
+
+  return (
+    <div className="Clocks__container">
+      <div className="Clocks__header">
+        <h3 className="Clocks__title">{name}</h3>
+        <div className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id}>x</div>
+      </div>
+      <time className="time__string">{timeString}</time>
+      {canvasClock()}
     </div>
   );
 };

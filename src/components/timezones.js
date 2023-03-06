@@ -74,7 +74,7 @@ const timezones = [
   {
     code: "HAST",
     name: "гавайско-алеутское время",
-    UTC_string: "UTC−10",
+    UTC_string: "UTC-10",
     UTC_offset: -600,
   },
   {

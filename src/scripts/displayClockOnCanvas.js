@@ -1,4 +1,4 @@
-function displayClockOnCanvas({current, canvasID}) {
+function displayClockOnCanvas({hours, minutes, seconds}, canvasID) {
   let canvasHTML = document.getElementById(canvasID);
   let contextHTML = canvasHTML.getContext("2d");
   contextHTML.strokeRect(0, 0, canvasHTML.width, canvasHTML.height);
@@ -26,7 +26,7 @@ function displayClockOnCanvas({current, canvasID}) {
   let radiusPoint;
   for(var tm = 0; tm < 60; tm++){
   contextHTML.beginPath();
-  if(tm % 5 == 0){radiusPoint = 5;}else{radiusPoint = 2;} //for points selection
+  if(tm % 5 === 0){radiusPoint = 5;}else{radiusPoint = 2;} //for points selection
   let xPointM = xCenterClock + radiusNum * Math.cos(-6*tm*(Math.PI/180) + Math.PI/2);
   let yPointM = yCenterClock - radiusNum * Math.sin(-6*tm*(Math.PI/180) + Math.PI/2);
   contextHTML.arc(xPointM, yPointM, radiusPoint, 0, 2*Math.PI, true);
@@ -55,13 +55,10 @@ contextHTML.closePath();
   let lengthMinutes = radiusNum - 15;
   let lengthHour = lengthMinutes / 1.5;
 
-  //перенести в инициализатор
-  let current = new Date();
-
   //Calculating arrow corner clockwise
-  let t_sec = 6 * .getSeconds();
-  let t_min = 6 * (current.getMinutes() + (1/60) * current.getSeconds());
-  let t_hour = 30 * (current.getHours() + (1/60) * current.getMinutes());
+  let t_sec = 6 * seconds;
+  let t_min = 6 * (minutes + (1/60) * seconds);
+  let t_hour = 30 * (hours + (1/60) * minutes);
 
   //Drawing seconds arrow
   contextHTML.beginPath();
@@ -103,13 +100,5 @@ contextHTML.closePath();
   
   return;
 }
-
-displayClockOnCanvas.intervalID = window.setInterval(
-function(){
-  let d = new Date();
-  document.getElementById("clock").innerHTML = d.toLocaleTimeString();
-  displayCanvas();
-}
-  , 1000);
 
 export default displayClockOnCanvas;
