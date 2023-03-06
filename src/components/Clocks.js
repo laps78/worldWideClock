@@ -50,26 +50,36 @@ function Clocks({ id, name, timezone, deleteClocks }) {
 
   const canvasClock = () => <canvas className="clock__canvas" id={id} width="300px" height="300px"></canvas>;
 
-  const calculateStartClockhandDegrees = (timeElements) => {
+  const calculateStartDegrees = (timeElements) => {
     const secondsStartDegree = 360 / 60 * getTimeElements.seconds;
     const minutesStartDegree = 360 / 60 * getTimeElements.minutes + 6 / 60 * getTimeElements.seconds;
     const hoursStartDegree = 360 / 12 * getTimeElements.hours + 30 / 60 * getTimeElements.minutes + 0.5 / 60 * getTimeElements.seconds;
+    
+    return {
+      secondsStartDegree,
+      minutesStartDegree,
+      hoursStartDegree,
+    }
   }
 
-  useEffect((id, hoursStartDegree, minutesStartDegree, secondsStartDegree) => {
-    const intervalID = window.setInterval(makeClocks, 1000);
-    /*return;
+  const turnCSShands = () => {
     const hoursHand = document.querySelector(`${id}_hour`);
     const minutesHand = document.querySelector(`${id}_minute`);
     const secondsHand = document.querySelector(`${id}_second`);
-  
-    hoursHand.style.transform = `rotate(${hoursStartDegree}deg)`;
-    minutesHand.style.transform = `rotate(${minutesStartDegree}deg)`;
-    secondsHand.style.transform = `rotate(${secondsStartDegree}deg)`;*/
-    // return () => {
-    //   if (intervalID) window.clearInterval(intervalID);
-    //   console.log('interval cleared!');
-    // };
+    if (hoursHand && minutesHand && secondsHand) {
+      console.log('ok');
+      hoursHand.transform = `rotate(${calculateStartDegrees(getTimeElements(makeClocks())).hoursStartDegree}deg)`;
+      minutesHand.transform = `rotate(${calculateStartDegrees(getTimeElements(makeClocks())).minutesStartDegree}deg)`;
+      secondsHand.transform = `rotate(${calculateStartDegrees(getTimeElements(makeClocks())).secondsStartDegree}deg)`;
+    }
+  }
+
+  useEffect(() => {
+    const intervalID = window.setInterval(makeClocks, 1000);
+    return () => {
+      if (intervalID) window.clearInterval(intervalID);
+      console.log('interval cleared!');
+    };
   }, []);
 
   const clockDeleteHandler = (evt) => {
@@ -151,10 +161,11 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     <div className="Clocks__container">
       <div className="Clocks__header">
         <h3 className="Clocks__title">{name}</h3>
-        <div className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id}>x</div>
+        <div className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id} alt="Удалить эти часы">x</div>
       </div>
       <time className="time__string">{timeString}</time>
       {canvasClock()}
+      {clocksCSS()}
     </div>
   );
 };
