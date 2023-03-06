@@ -1,10 +1,30 @@
+import React, { useEffect } from 'react';
+import timezones from './timezones';
+
 function Clocks({ id, name, timezone, deleteClocks }) {
 
-  const date = new Date(Date.UTC());
+  const date = new Date();
+  const currentTimezoneOffsetHours = date.getTimezoneOffset() / 60;
+  const CurrentUTC = Date.UTC(date);
+
+  console.log(CurrentUTC); // ЧТО ТУТ ЛЕЖИТ?
+  console.log('currentOffset: ', currentTimezoneOffset);
+  
+  //TODO calculate targetDate!
+  const calculatedOffset = () => {
+    const targetTZ = timezones.find(tz => tz.name === timezone);
+    const targetDate = null;
+  }
+
   let hours = date.getHours();
   const minutes = date.getMinutes();
   const seconds = date.getSeconds();
-
+  if((hours + currentTimezoneOffsetHours) > 24) {
+    hours = 
+  } 
+  if((hours + currentTimezoneOffsetHours) < 0) {
+    hours = 
+  }
   if (hours > 12) {
     hours -= 12;
   }
@@ -14,8 +34,6 @@ function Clocks({ id, name, timezone, deleteClocks }) {
   const hoursStartDegree = 360 / 12 * hours + 30 / 60 * minutes + 0.5 / 60 * seconds;
   
   const clockDeleteHandler = (evt) => {
-    console.log("clock delete!");
-    console.log('dataset.id: ', evt.target.dataset.id);
     deleteClocks(evt.target.dataset.id);
   }
 
@@ -23,8 +41,9 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     <div className="Clocks__container">
       <div className="Clocks__header">
         <h3 className="Clocks__title">{name}</h3>
-        <span className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id}>x</span>
+        <div className="Clocks_delete_button" onClick={clockDeleteHandler} data-id={id}>x</div>
       </div>
+      <time className="time__string">{`${hours}:${minutes}:${seconds}`}</time>
       <time className="clock">
         <span className="clock__stroke clock__stroke--small clock__stroke--1"></span>
         <span className="clock__stroke clock__stroke--small clock__stroke--2"></span>
@@ -87,13 +106,23 @@ function Clocks({ id, name, timezone, deleteClocks }) {
         <span className="clock__stroke clock__stroke--small clock__stroke--59"></span>
         <span className="clock__stroke clock__stroke--60"></span>
       
-        <span className="clock__hand clock__hand--hour"></span>
-        <span className="clock__hand clock__hand--minute"></span>
-        <span className="clock__hand clock__hand--second"></span>
+        <span className="clock__hand clock__hand--hour" id={`${id}_hour`}></span>
+        <span className="clock__hand clock__hand--minute" id={`${id}_minute`}></span>
+        <span className="clock__hand clock__hand--second" id={`${id}_second`}></span>
       </time>
     </div>
   );
-}
+};
+
+React.useEffect((id, hoursStartDegree, minutesStartDegree, secondsStartDegree) => {
+  const hoursHand = document.querrySelector(`${id}_hour`);
+  const minutesHand = document.querrySelector(`${id}_minute`);
+  const secondsHand = document.querrySelector(`${id}_second`);
+
+  hoursHand.style.transform = `rotate(${hoursStartDegree}deg)`;
+  minutesHand.style.transform = `rotate(${minutesStartDegree}deg)`;
+  secondsHand.style.transform = `rotate(${secondsStartDegree}deg)`;
+}, []);
 
 export default Clocks;
 
