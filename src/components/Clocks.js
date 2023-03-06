@@ -4,12 +4,18 @@ import displayClockOnCanvas from '../scripts/displayClockOnCanvas';
 
 function Clocks({ id, name, timezone, deleteClocks }) {
   const [timeString, setTimeString] = useState('');
+  let clockHandDegrees = {};
   const makeClocks = () => {
     const date = new Date();
     const targetTime = new Date(getTargetTime(date));
     const timeElements = getTimeElements(targetTime);
     setTimeString(getTimeString(targetTime));
-    if(document.getElementById(id)) displayClockOnCanvas(timeElements, id);
+    clockHandDegrees = calculateStartDegrees(getTimeElements(targetTime));
+    // console.log(clockHandDegrees);
+    console.log(`rotate(${clockHandDegrees.hoursStartDegree}deg)`);
+    console.log(`rotate(${clockHandDegrees.minutesStartDegree}deg)`);
+    console.log(`rotate(${clockHandDegrees.secondsStartDegree}deg)`);
+    if (document.getElementById(id)) displayClockOnCanvas(timeElements, id);
     return targetTime;
   }
   
@@ -50,27 +56,15 @@ function Clocks({ id, name, timezone, deleteClocks }) {
 
   const canvasClock = () => <canvas className="clock__canvas" id={id} width="300px" height="300px"></canvas>;
 
-  const calculateStartDegrees = (timeElements) => {
-    const secondsStartDegree = 360 / 60 * getTimeElements.seconds;
-    const minutesStartDegree = 360 / 60 * getTimeElements.minutes + 6 / 60 * getTimeElements.seconds;
-    const hoursStartDegree = 360 / 12 * getTimeElements.hours + 30 / 60 * getTimeElements.minutes + 0.5 / 60 * getTimeElements.seconds;
+  const calculateStartDegrees = ({hours, minutes, seconds}) => {
+    const secondsStartDegree = 360 / 60 * seconds;
+    const minutesStartDegree = 360 / 60 * minutes + 6 / 60 * seconds;
+    const hoursStartDegree = 360 / 12 * hours + 30 / 60 * minutes + 0.5 / 60 * seconds;
     
     return {
       secondsStartDegree,
       minutesStartDegree,
       hoursStartDegree,
-    }
-  }
-
-  const turnCSShands = () => {
-    const hoursHand = document.querySelector(`${id}_hour`);
-    const minutesHand = document.querySelector(`${id}_minute`);
-    const secondsHand = document.querySelector(`${id}_second`);
-    if (hoursHand && minutesHand && secondsHand) {
-      console.log('ok');
-      hoursHand.transform = `rotate(${calculateStartDegrees(getTimeElements(makeClocks())).hoursStartDegree}deg)`;
-      minutesHand.transform = `rotate(${calculateStartDegrees(getTimeElements(makeClocks())).minutesStartDegree}deg)`;
-      secondsHand.transform = `rotate(${calculateStartDegrees(getTimeElements(makeClocks())).secondsStartDegree}deg)`;
     }
   }
 
@@ -150,9 +144,9 @@ function Clocks({ id, name, timezone, deleteClocks }) {
         <span className="clock__stroke clock__stroke--small clock__stroke--59"></span>
         <span className="clock__stroke clock__stroke--60"></span>
       
-        <span className="clock__hand clock__hand--hour" id={`${id}_hour`}></span>
-        <span className="clock__hand clock__hand--minute" id={`${id}_minute`}></span>
-        <span className="clock__hand clock__hand--second" id={`${id}_second`}></span>
+        <span className="clock__hand clock__hand--hour" style={{ transform: 'rotate(' + clockHandDegrees.hoursStartDegree + 'deg)', }}></span>
+        <span className="clock__hand clock__hand--minute" style={{ transform: `rotate(${clockHandDegrees.minutesStartDegree}deg)`, }}></span>
+        <span className="clock__hand clock__hand--second" style={{ transform: `rotate(${clockHandDegrees.secondsStartDegree}deg)`, }}></span>
       </time>
     );
   }
