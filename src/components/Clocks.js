@@ -144,28 +144,9 @@ function Clocks({ id, name, timezone, deleteClocks }) {
         <span className="clock__stroke clock__stroke--small clock__stroke--59"></span>
         <span className="clock__stroke clock__stroke--60"></span>
       
-        <span
-          className="clock__hand clock__hand--hour"
-          style={
-            {
-              transform: 'rotate(' + clockHandDegrees.hoursStartDegree + 'deg)',
-            }
-          }
-        ></span>
-        <span
-          className="clock__hand clock__hand--minute"
-          style={
-            {
-              transform: `rotate(${clockHandDegrees.minutesStartDegree}deg)`,
-            }
-          }></span>
-        <span
-          className="clock__hand clock__hand--second"
-          style={
-            {
-              transform: `rotate(${clockHandDegrees.secondsStartDegree}deg)`,
-            }
-          }></span>
+        <span className="clock__hand clock__hand--hour" style={{ transform: `rotate(${clockHandDegrees.hoursStartDegree}deg)`, }}></span>
+        <span className="clock__hand clock__hand--minute" style={{ transform: `rotate(${clockHandDegrees.minutesStartDegree}deg)`, }}></span>
+        <span className="clock__hand clock__hand--second" style={{ transform: `rotate(${clockHandDegrees.secondsStartDegree}deg)`, }}></span>
       </time>
     );
   }
