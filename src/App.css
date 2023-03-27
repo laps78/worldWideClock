@@ -3,6 +3,12 @@
   padding: 0;
 }
 
+:root {
+  --hours_current_degree: 0;
+  --minutes_current_degree: 0;
+  --seconds_current_degree: 0;
+}
+
 .App {
   width: 100%;
   display: flex;
@@ -379,6 +385,7 @@
     width: 0.05em;
     bottom: 50%;
     left: 50%;
+    transform: rotate(var(--hours_current_degree));
 }
 
 .clock__hand--minute::after {
@@ -394,6 +401,7 @@
     width: 0.03em;
     bottom: 50%;
     left: 50%;
+    transform: rotate(var(--minutes_current_degree));
 }
 
 .clock__hand--second::after {
@@ -409,6 +417,7 @@
     width: 0.01em;
     bottom: 50%;
     left: 50%;
+    transform: rotate(var(--seconds_current_degree))
 }
 
 .clock__hand {
@@ -421,18 +430,4 @@
   width: 1em;
   left: 50%;
   top: 50%;
-}
-.clock__hand--hour::after {
-  content: "";
-  border-radius: 0.015em 0.015em 0.01em 0.01em;
-  background-color: #000;
-  margin-bottom: -0.02em;
-  margin-left: -0.025em;
-  font-size: inherit;
-  position: absolute;
-  display: block;
-  height: 0.25em;
-  width: 0.05em;
-  bottom: 50%;
-  left: 50%;
 }

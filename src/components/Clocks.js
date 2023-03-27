@@ -4,11 +4,61 @@ import displayClockOnCanvas from '../scripts/displayClockOnCanvas';
 
 function Clocks({ id, name, timezone, deleteClocks }) {
   const [timeString, setTimeString] = useState('');
+  const [timeElements, setTimeElements] = useState('');
+  
+  const Clock = ({ hours, minutes, seconds }) => {
+    const [time, setTime] = useState({ hours, minutes, seconds });
+  
+    return (
+      <div>
+        <svg width="300" height="300">
+          <circle
+            r="145"
+            cx="150"
+            cy="150"
+            fill="white"
+            stroke="black"
+            stroke-width="3"
+          />
+          <line
+            x1="150"
+            y1="150"
+            x2="150"
+            y2="60"
+            stroke="black"
+            stroke-width="4"
+            transform={`rotate(${time.hours * 30} 150 150)`}
+          />
+          <line
+            x1="150"
+            y1="150"
+            x2="150"
+            y2="50"
+            stroke="black"
+            stroke-width="3"
+            transform={`rotate(${time.minutes * 6} 150 150)`}
+          />
+          <line
+            x1="150"
+            y1="150"
+            x2="150"
+            y2="40"
+            stroke="red"
+            stroke-width="2"
+            transform={`rotate(${time.seconds * 6} 150 150)`}
+          />
+        </svg>
+      </div>
+    );
+  };
+  
+
   let clockHandDegrees = {};
   const makeClocks = () => {
     const date = new Date();
     const targetTime = new Date(getTargetTime(date));
     const timeElements = getTimeElements(targetTime);
+    setTimeElements(timeElements);
     setTimeString(getTimeString(targetTime));
     clockHandDegrees = calculateStartDegrees(getTimeElements(targetTime));
     // console.log(clockHandDegrees);
@@ -19,6 +69,12 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     return targetTime;
   }
   
+  const getTargetTime = (date) => {
+    const currentTimezoneOffsetMS = date.getTimezoneOffset() * 60 * 1000;
+    const targetUTCOffetMS = timezones.find(tz => tz.name === timezone).UTC_offset * 60 * 1000;
+    return date.getTime() + currentTimezoneOffsetMS + targetUTCOffetMS;
+  }
+
   const getTimeString = (time) => {
     
     let hours = time.getHours();
@@ -31,12 +87,6 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     if (seconds < 10) seconds = `0${seconds}`;
 
     return `${hours}:${minutes}:${seconds}`;
-  }
-
-  const getTargetTime = (date) => {
-    const currentTimezoneOffsetMS = date.getTimezoneOffset() * 60 * 1000;
-    const targetUTCOffetMS = timezones.find(tz => tz.name === timezone).UTC_offset * 60 * 1000;
-    return date.getTime() + currentTimezoneOffsetMS + targetUTCOffetMS;
   }
 
   const getTimeElements = (date) => {
@@ -99,9 +149,9 @@ function Clocks({ id, name, timezone, deleteClocks }) {
     return (
       <time className="clock">
         {clockStrokes()}      
-        <span className="clock__hand clock__hand--hour" style={{ transform: `rotate(${clockHandDegrees.hoursStartDegree}deg)`, }}></span>
-        <span className="clock__hand clock__hand--minute" style={{ transform: `rotate(${clockHandDegrees.minutesStartDegree}deg)`, }}></span>
-        <span className="clock__hand clock__hand--second" style={{ transform: `rotate(${clockHandDegrees.secondsStartDegree}deg)`, }}></span>
+        <span className="clock__hand clock__hand--hour" style={{"--hours_current_degree": `${clockHandDegrees.hoursStartDegree}`}}></span>
+        <span className="clock__hand clock__hand--minute" style={{ "transform": `rotate(${clockHandDegrees.minutesStartDegree}deg)`, }}></span>
+        <span className="clock__hand clock__hand--second" style={{ "transform": `rotate(${clockHandDegrees.secondsStartDegree}deg)`, }}></span>
       </time>
     );
   }
@@ -115,6 +165,11 @@ function Clocks({ id, name, timezone, deleteClocks }) {
       <time className="time__string">{timeString}</time>
       {canvasClock()}
       {clocksCSS()}
+      <hr />
+      <Clock
+        hours={timeElements.hours}
+        minutes={timeElements.minutes}
+        seconds={timeElements.seconds} />
     </div>
   );
 };
