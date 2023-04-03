@@ -6,6 +6,10 @@ function Clocks({ id, name, timezone, deleteClocks }) {
   const [timeString, setTimeString] = useState('');
   const [timeElements, setTimeElements] = useState('');
   
+  
+
+  // напиши функциональный react компонент, принимающий {hours, minutes, seconds} и выводящий аналоговые часы на svg 300х300 пикселей с разметкой циферблата цифрами и точками
+
   const Clock = ({ hours, minutes, seconds }) => {
     const [time, setTime] = useState({ hours, minutes, seconds });
   
@@ -18,13 +22,13 @@ function Clocks({ id, name, timezone, deleteClocks }) {
             cy="150"
             fill="white"
             stroke="black"
-            stroke-width="3"
+            stroke-width="2"
           />
           <line
             x1="150"
             y1="150"
             x2="150"
-            y2="60"
+            y2="70"
             stroke="black"
             stroke-width="4"
             transform={`rotate(${time.hours * 30} 150 150)`}
@@ -33,7 +37,7 @@ function Clocks({ id, name, timezone, deleteClocks }) {
             x1="150"
             y1="150"
             x2="150"
-            y2="50"
+            y2="45"
             stroke="black"
             stroke-width="3"
             transform={`rotate(${time.minutes * 6} 150 150)`}
@@ -47,7 +51,7 @@ function Clocks({ id, name, timezone, deleteClocks }) {
             stroke-width="2"
             transform={`rotate(${time.seconds * 6} 150 150)`}
           />
-        </svg>
+        </svg>        
       </div>
     );
   };
